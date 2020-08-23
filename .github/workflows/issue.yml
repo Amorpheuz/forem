@@ -9,7 +9,7 @@ on:
 jobs:
   comment:
     name: Comment
-    if: ${{ github.event_name == 'issues' && github.event.action == 'created' }}
+    if: ${{ github.event_name == 'issues' && github.event.action == 'opened' }}
     runs-on: ubuntu-latest
     steps:
       - name: Automatic Comment

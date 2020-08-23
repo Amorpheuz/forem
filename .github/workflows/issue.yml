@@ -43,3 +43,30 @@ jobs:
           edit-mode: replace
           body: |
             To our awesome contributors, please note that this issue will be worked on by a Forem team member and is not up for grabs.
+
+  unlabeled:
+    name: Unassign Forem Team
+    if: ${{ github.event_name == 'issues' && github.event.action == 'unlabeled' && github.event.label.name == 'Test team'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch comment id
+        id: comment_id_fetcher
+        run: |
+          echo "::set-output name=comment_id::$(curl -s "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments" | python3 -c "import sys, json; print(list(filter(lambda comment: comment['user']['login'] == 'github-actions[bot]',json.load(sys.stdin)))[0]['id'])")"
+
+      - name: Unassign Forem Team
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment-id: ${{ steps.comment_id_fetcher.outputs.comment_id }}
+          edit-mode: replace
+          body: |
+            Thanks for the issue! We'll take your request into consideration and follow up if we decide to tackle this issue.
+
+            To our amazing contributors: issues labeled `type: bug` are always up for grabs, but for feature requests, please wait until we add a `ready for dev` before starting to work on it.
+
+            To claim an issue to work on, please leave a comment. If you've claimed the issue and need help, please ping @forem/oss and we will follow up within 3 business days.
+
+            For full info on how to contribute, please check out our [contributors guide](https://github.com/forem/forem/blob/master/CONTRIBUTING.md).
+
+

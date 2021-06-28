@@ -148,6 +148,7 @@ module MarkdownProcessor
         .wrap_all_images_in_links
         .add_control_class_to_codeblock
         .add_control_panel_to_codeblock
+        .add_tabindex_to_codeblock
         .add_fullscreen_button_to_panel
         .wrap_all_tables
         .remove_empty_paragraphs

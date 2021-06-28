@@ -85,7 +85,19 @@ module Html
       doc = Nokogiri::HTML.fragment(@html)
 
       doc.search("div.highlight").each do |codeblock|
-        codeblock.add_child('<div class="highlight__panel js-actions-panel"></div>')
+        codeblock.add_child('<div class="opacity-0 highlight__panel js-actions-panel"></div>')
+      end
+
+      @html = doc.to_html
+
+      self
+    end
+
+    def add_tabindex_to_codeblock
+      doc = Nokogiri::HTML.fragment(@html)
+
+      doc.search("pre").each do |codeblock|
+        codeblock["tabindex"] = "0"
       end
 
       @html = doc.to_html
@@ -107,10 +119,10 @@ module Html
       doc = Nokogiri::HTML.fragment(@html)
       doc.search("div.highlight__panel").each do |codeblock|
         fullscreen_action = <<~HTML
-          <div class="highlight__panel-action js-fullscreen-code-action">
+          <button class="highlight__panel-action js-fullscreen-code-action">
               #{icon_fullscreen_on}
               #{icon_fullscreen_off}
-          </div>
+          </button>
         HTML
 
         codeblock.add_child(fullscreen_action)
